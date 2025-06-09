@@ -171,8 +171,6 @@ To achieve 3NF, we split the table further:
 
 ---
 
----
-
 # ACID PROPERTIES
 
 ## INTRODUCTION
