@@ -1,0 +1,587 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Normalization_and_ACID_Properties</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link
+      rel="stylesheet"
+      href="file:///c:\Users\ADMIN\.vscode\extensions\shd101wyy.markdown-preview-enhanced-0.8.18\crossnote\dependencies\katex\katex.min.css"
+    />
+    <link rel="stylesheet" href="normalization.css">
+  </head>
+  <body for="html-export">
+    <div class="crossnote markdown-preview">
+      <h1 id="table-of-contents">Table of Contents</h1>
+      <ol>
+        <li><a href="#intro">Introduction</a></li>
+        <li>
+          <a href="#database-normalization">Database Normalization</a>
+          <ul>
+            <li><a href="#introduction">Introduction to Normalization</a></li>
+            <li><a href="#first-normal-form1nf">1NF</a></li>
+            <li><a href="#second-normal-form2nf">2NF</a></li>
+            <li><a href="#third-normal-form3nf">3NF</a></li>
+          </ul>
+        </li>
+        <li>
+          <a href="#acid-properties">ACID Properties</a>
+          <ul>
+            <li>
+              <a href="#introduction-1">Introduction to ACID properties</a>
+            </li>
+            <li><a href="#atomicity">Atomicity</a></li>
+            <li><a href="#consistency">Consistency</a></li>
+            <li><a href="#isolation">Isolation</a></li>
+            <li><a href="#durability">Durability</a></li>
+          </ul>
+        </li>
+      </ol>
+      <hr />
+      <h1 id="intro">INTRO</h1>
+      <p>
+        Database normalization and ACID properties are foundational concepts in
+        database management system that ensure data integrity, efficiency and
+        reliabilty.
+      </p>
+      <p>
+        In this document, I have discussed in details the concepts of database
+        normalization, and the ACID properties which are essential components in
+        enhancing efficiency in data access in databases as well as ensuring
+        that there is redundacy and a quick recorvery from failure even in cases
+        of System failure, Power loss or crashes in the system.
+      </p>
+      <hr />
+      <h1 id="database-normalization">DATABASE NORMALIZATION</h1>
+      <h2 id="introduction">INTRODUCTION</h2>
+      <p>
+        Database normalization refers to the process of organizing data in a the
+        database so that it is stored efficiently and without unnecessary
+        duplication.
+      </p>
+      <p>
+        Normalization helps break large tables into small related tables while
+        defining clear relationships between them thus acheive:
+      </p>
+      <ul>
+        <li>
+          Create Update Read and Delete operations are done without errors
+        </li>
+        <li>Each peice of data is stored only once (no duplicates)</li>
+        <li>Prevent un intentional data loss</li>
+      </ul>
+      <hr />
+      <h2 id="first-normal-form1nf">FIRST NORMAL FORM(1NF)</h2>
+      <p>
+        In the first normalization, the aim is to
+        <strong>ensure atomicity of the data stored in each cell</strong> thus
+        each cell stores only 1 piece of data.<br />
+        There are no repeating groups or arrays of data; the data is
+        atomic(indivisble).
+      </p>
+      <p>
+        For example basing in a database that stores the order information of a
+        FRUIT-PARLOUR business that sells fruits.
+      </p>
+      <p>
+        Table in Zeroth Normal form:<br />
+        <code>ORDER_INFO table</code>
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th>Order_id</th>
+            <th>customer_name</th>
+            <th>items_bought</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>Mwihaki</td>
+            <td>Mango</td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>John</td>
+            <td>Melon</td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>Kefa</td>
+            <td>Orange, Pinaapple</td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td>David</td>
+            <td>Avocado, Pawpaw</td>
+          </tr>
+        </tbody>
+      </table>
+      <p>
+        To remove the multiple inputs in the <code>items_bought</code> column
+        for <code>Order_id</code> 3, 4, The table is noramlized to First Normal
+        form resulting to:
+      </p>
+      <p>
+        Table in First Normal Form:<br />
+        <code>ORDER_INFO table</code>
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th>Order_id</th>
+            <th>customer_name</th>
+            <th>items_bought</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>Mwihaki</td>
+            <td>Mango</td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>John</td>
+            <td>Melon</td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>Kefa</td>
+            <td>Orange</td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>Kefa</td>
+            <td>Pineaapple</td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td>David</td>
+            <td>Avocado</td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td>David</td>
+            <td>Pawpaw</td>
+          </tr>
+        </tbody>
+      </table>
+      <hr />
+      <h2 id="second-normal-form2nf">SECOND NORMAL FORM(2NF)</h2>
+      <p>
+        The Second Normalization(2NF) build on top of the First Normal Form by
+        removing <strong>partial dependancies</strong> that is, all non-key
+        columns must depend only on the Primary-Key column.
+      </p>
+      <p>
+        For example: introducing an Order_date column in the 1NF-ORDER_INFO
+        table gives:
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th>Order_id</th>
+            <th>customer_name</th>
+            <th>items_bought</th>
+            <th>Order_date</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>Mwihaki</td>
+            <td>Mango</td>
+            <td>2025-06-01</td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>John</td>
+            <td>Melon</td>
+            <td>2025-06-03</td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>Kefa</td>
+            <td>Orange</td>
+            <td>2025-06-05</td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>Kefa</td>
+            <td>Pineaapple</td>
+            <td>2025-06-07</td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td>David</td>
+            <td>Avocado</td>
+            <td>2025-06-07</td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td>David</td>
+            <td>Pawpaw</td>
+            <td>2025-06-08</td>
+          </tr>
+        </tbody>
+      </table>
+      <p>
+        The 2NF would require the table to be split into two
+        <strong>Orders</strong> table and <strong>Order_details</strong> table
+      </p>
+      <p><code>Orders</code> table:</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Order_id</th>
+            <th>customer_name</th>
+            <th>Order_date</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>Mwihaki</td>
+            <td>2025-06-01</td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>John</td>
+            <td>2025-06-03</td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>Kefa</td>
+            <td>2025-06-05</td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>Kefa</td>
+            <td>2025-06-07</td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td>David</td>
+            <td>2025-06-07</td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td>David</td>
+            <td>2025-06-08</td>
+          </tr>
+        </tbody>
+      </table>
+      <p><code>Order_details</code> table</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Order_id</th>
+            <th>items_bought</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>Mango</td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>Melon</td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>Orange</td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>Pineaapple</td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td>Avocado</td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td>Pawpaw</td>
+          </tr>
+        </tbody>
+      </table>
+      <hr />
+      <h2 id="third-normal-form3nf">THIRD NORMAL FORM(3NF)</h2>
+      <p>
+        The Third Normal Form (3NF) builds on top of 2NF by removing
+        <strong>transitive dependencies</strong>. A transitive dependency occurs
+        when a non-key column depends on another non-key column, rather than
+        depending directly on the primary key.
+      </p>
+      <p>3NF ensures that:</p>
+      <ul>
+        <li>
+          Every non-key column must depend only on the primary key, and not on
+          any other non-key column.
+        </li>
+        <li>
+          This further reduces redundancy and makes the database easier to
+          maintain.
+        </li>
+      </ul>
+      <p>
+        For Example (Continuing from 2NF):<br />
+        Suppose we add a <code>customer_address</code> column to the
+        <code>Orders</code> table:
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th>Order_id</th>
+            <th>customer_name</th>
+            <th>Order_date</th>
+            <th>customer_address</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>Mwihaki</td>
+            <td>2025-06-01</td>
+            <td>Nairobi</td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>John</td>
+            <td>2025-06-03</td>
+            <td>Nakuru</td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>Kefa</td>
+            <td>2025-06-05</td>
+            <td>Eldoret</td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td>Kefa</td>
+            <td>2025-06-07</td>
+            <td>Eldoret</td>
+          </tr>
+          <tr>
+            <td>5</td>
+            <td>David</td>
+            <td>2025-06-07</td>
+            <td>Kisumu</td>
+          </tr>
+          <tr>
+            <td>6</td>
+            <td>David</td>
+            <td>2025-06-08</td>
+            <td>Kisumu</td>
+          </tr>
+        </tbody>
+      </table>
+      <p>
+        In the 2NF table above <code>customer_address</code> depends on
+        <code>customer_name</code>, not directly on <code>Order_id</code>. This
+        is a transitive dependency.
+      </p>
+      <p>To achieve 3NF, we split the table further:</p>
+      <h4 id="orders-table"><code>Orders</code> table:</h4>
+      <table>
+        <thead>
+          <tr>
+            <th>Order_id</th>
+            <th>customer_name</th>
+            <th>Order_date</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>Mwihaki</td>
+            <td>2025-06-01</td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>John</td>
+            <td>2025-06-03</td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>Kefa</td>
+            <td>2025-06-05</td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>Kefa</td>
+            <td>2025-06-07</td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td>David</td>
+            <td>2025-06-07</td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td>David</td>
+            <td>2025-06-08</td>
+          </tr>
+        </tbody>
+      </table>
+      <h4 id="order_details-table"><code>Order_details</code> table:</h4>
+      <table>
+        <thead>
+          <tr>
+            <th>Order_id</th>
+            <th>items_bought</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>Mango</td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>Melon</td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>Orange</td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>Pineaapple</td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td>Avocado</td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td>Pawpaw</td>
+          </tr>
+        </tbody>
+      </table>
+      <h4 id="customers-table"><code>Customers</code> table:</h4>
+      <table>
+        <thead>
+          <tr>
+            <th>customer_name</th>
+            <th>customer_address</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Mwihaki</td>
+            <td>Nairobi</td>
+          </tr>
+          <tr>
+            <td>John</td>
+            <td>Nakuru</td>
+          </tr>
+          <tr>
+            <td>Kefa</td>
+            <td>Eldoret</td>
+          </tr>
+          <tr>
+            <td>David</td>
+            <td>Kisumu</td>
+          </tr>
+        </tbody>
+      </table>
+      <p>
+        <code>customer_address</code> is stored only once for each customer, and
+        all non-key columns depend only on the primary key of their respective
+        tables.
+      </p>
+      <hr />
+      <h1 id="acid-properties">ACID PROPERTIES</h1>
+      <h2 id="introduction-1">INTRODUCTION</h2>
+      <p>
+        ACID is an acronym for a set of properties that ensure that database
+        transactions are processed reliably. The properties are Atomicity,
+        Consistency, Isolation, and Durability. Implementing these properties in
+        a database system is crucial for maintaining data integrity, especially
+        in systems that involve concurrent transactions and critical data
+        operations.
+      </p>
+      <hr />
+      <h2 id="atomicity">ATOMICITY</h2>
+      <p>
+        <strong>Atomicity</strong> ensures that each database transaction is
+        treated as a single, indivisible unit. This means that either all
+        operations within the transaction are completed successfully, or none of
+        them are applied. If any part of the transaction fails, the entire
+        transaction is rolled back, leaving the database unchanged.
+      </p>
+      <p><strong>For Example:</strong></p>
+      <p>
+        Transferring money from a bank account to a friend's account using
+        online banking. The transaction involves two steps:
+      </p>
+      <ol>
+        <li>Deducting the amount from your account.</li>
+        <li>Adding the amount to your friend's account.</li>
+      </ol>
+      <p>
+        With atomicity, both steps must succeed for the transaction to be
+        complete. If the system crashes after deducting money from your account
+        but before adding it to your friend's account, atomicity ensures that
+        the deduction is undone, so no money is lost or created. The transaction
+        is either fully completed or not done at all.
+      </p>
+      <hr />
+      <h2 id="consistency">CONSISTENCY</h2>
+      <p>
+        <strong>Consistency</strong> ensures that a database remains in a valid
+        state before and after a transaction. Any transaction must take the
+        database from one valid state to another, following all defined rules,
+        constraints, and triggers.
+      </p>
+      <p><strong>For Example:</strong></p>
+      <p>
+        In a university database where every student must be assigned to an
+        existing course. If you try to enroll a student in a course that doesn't
+        exist, the transaction will fail, and the database will remain
+        unchanged. Consistency guarantees that the database cannot end up with
+        invalid or corrupt data, such as students enrolled in non-existent
+        courses.
+      </p>
+      <hr />
+      <h2 id="isolation">ISOLATION</h2>
+      <p>
+        <strong>Isolation</strong> ensures that transactions are executed
+        independently of one another. The intermediate state of a transaction is
+        invisible to other transactions, so concurrent transactions do not
+        interfere with each other.
+      </p>
+      <p><strong>For Example:</strong></p>
+      <p>
+        Two people booking the last available seat on a flight at the same time.
+        Isolation ensures that only one booking will succeed, and the other will
+        be informed that the seat is no longer available. This prevents
+        double-booking and ensures that each transaction is processed as if it
+        were the only one running at that moment.
+      </p>
+      <hr />
+      <h2 id="durability">DURABILITY</h2>
+      <p>
+        <strong>Durability</strong> guarantees that once a transaction has been
+        committed, its changes are permanent, even in the event of a system
+        crash or power failure. The database will remember the committed changes
+        no matter what happens.
+      </p>
+      <p><strong>For Example:</strong></p>
+      <p>
+        After you successfully transfer money to your friend's account and
+        receive a confirmation, durability ensures that the transaction is
+        saved. Even if the bank's server crashes immediately after, your
+        transaction will not be lost. When the system is restored, the database
+        will still reflect the completed transfer.
+      </p>
+      <hr />
+    </div>
+  </body>
+</html>
